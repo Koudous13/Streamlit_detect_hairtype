@@ -71,7 +71,7 @@ st.title("✨ Analyseur de Type de Cheveux ✨")
 st.write("Chargez une image ou prenez une photo pour découvrir le type de cheveux et recevoir des conseils personnalisés.")
 
 # Capture via caméra ou téléchargement
-capture_mode = st.radio("Mode de saisie :", ("Télécharger une image", "Prendre une photo"))
+capture_mode = st.radio("Mode de saisie :", ("Télécharger une image"))
 
 if capture_mode == "Télécharger une image":
     uploaded_file = st.file_uploader("Choisissez une image", type=["jpg", "jpeg", "png"])
