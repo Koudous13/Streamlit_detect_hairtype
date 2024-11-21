@@ -27,7 +27,7 @@ def predict_hair_type(image_data):
     # Prétraiter l'image pour le modèle
     image = Image.open(io.BytesIO(image_data)).convert("RGB")
     image = image.resize((224, 224))
-    img_array = np.array(image) / 255.0
+    #img_array = np.array(image) / 255.0
     img_array = np.expand_dims(img_array, axis=0).astype(np.float32)
 
     # Prédiction avec le modèle
