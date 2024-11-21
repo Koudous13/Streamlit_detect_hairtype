@@ -75,9 +75,6 @@ if capture_mode == "Télécharger une image":
     uploaded_file = st.file_uploader("Choisissez une image", type=["jpg", "jpeg", "png"])
     if uploaded_file:
         image_data = uploaded_file.read()
-else:
-    return 0
-
 if 'image_data' in locals() and image_data:
     # Prédire le type de cheveux
     try:
