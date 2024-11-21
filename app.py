@@ -13,11 +13,40 @@ model = tf.saved_model.load(model_path)
 
 # Mapping des types de cheveux et des suggestions
 hair_suggestions = {
-    "Cheveux Bouclés": "Hydratez vos boucles avec des produits sans sulfate et définissez-les avec un diffuseur. Entretenez mieux vos cheveux 🏃‍♀️‍➡️🏃‍♀️‍➡️👉 https://ndeyecoiffure.fr/formations-tresses/ Explorez d'autres modèles de cheveux 👉👉https://ndeyecoiffure.fr/shooting-photos/",
-    "Cheveux Raides": "Boostez leur éclat avec un sérum lissant et protégez-les contre la chaleur avant tout coiffage. Entretenez mieux vos cheveux 🏃‍♀️‍➡️🏃‍♀️‍➡️👉 https://ndeyecoiffure.fr/formations-tresses/ Explorez d'autres modèles de cheveux 👉👉https://ndeyecoiffure.fr/shooting-photos/",
-    "Cheveux Souples ou Ondulés": "Ajoutez du volume avec une mousse légère et définissez vos ondulations avec des sprays texturisants. Entretenez mieux vos cheveux 🏃‍♀️‍➡️🏃‍♀️‍➡️👉 https://ndeyecoiffure.fr/formations-tresses/ Explorez d'autres modèles de cheveux 👉👉https://ndeyecoiffure.fr/shooting-photos/",
-    "Dreadlocks": "Lavez-les régulièrement avec un shampooing doux et hydratez vos racines pour des locks saines et brillantes. Entretenez mieux vos cheveux 🏃‍♀️‍➡️🏃‍♀️‍➡️👉 https://ndeyecoiffure.fr/formations-tresses/ Explorez d'autres modèles de cheveux 👉👉https://ndeyecoiffure.fr/shooting-photos/",
-    "Cheveux Crépus": "Hydratez intensément avec des crèmes riches et protégez vos pointes avec des coiffures protectrices. Entretenez mieux vos cheveux 🏃‍♀️‍➡️🏃‍♀️‍➡️👉 https://ndeyecoiffure.fr/formations-tresses/ Explorez d'autres modèles de cheveux 👉👉https://ndeyecoiffure.fr/shooting-photos/"
+    "Cheveux Bouclés": '''
+    Hydratez vos boucles avec des produits sans sulfate et définissez-les avec un diffuseur. 
+    
+    Entretenez mieux vos cheveux 🏃‍♀️‍➡️🏃‍♀️‍➡️👉 https://ndeyecoiffure.fr/formations-tresses/ 
+    
+    Explorez d'autres modèles de cheveux 👉👉https://ndeyecoiffure.fr/shooting-photos/'''
+    ,
+    "Cheveux Raides": ''' 
+    Boostez leur éclat avec un sérum lissant et protégez-les contre la chaleur avant tout coiffage. 
+    
+    Entretenez mieux vos cheveux 🏃‍♀️‍➡️🏃‍♀️‍➡️👉 https://ndeyecoiffure.fr/formations-tresses/ 
+    
+    Explorez d'autres modèles de cheveux 👉👉https://ndeyecoiffure.fr/shooting-photos/''',
+    
+    "Cheveux Souples ou Ondulés": ''' 
+    Ajoutez du volume avec une mousse légère et définissez vos ondulations avec des sprays texturisants. 
+    
+    Entretenez mieux vos cheveux 🏃‍♀️‍➡️🏃‍♀️‍➡️👉 https://ndeyecoiffure.fr/formations-tresses/ 
+    
+    Explorez d'autres modèles de cheveux 👉👉https://ndeyecoiffure.fr/shooting-photos/''',
+    
+    "Dreadlocks": ''' 
+    Lavez-les régulièrement avec un shampooing doux et hydratez vos racines pour des locks saines et brillantes. 
+    
+    Entretenez mieux vos cheveux 🏃‍♀️‍➡️🏃‍♀️‍➡️👉 https://ndeyecoiffure.fr/formations-tresses/ 
+    
+    Explorez d'autres modèles de cheveux 👉👉https://ndeyecoiffure.fr/shooting-photos/''' ,
+    
+    "Cheveux Crépus": ''' 
+    Hydratez intensément avec des crèmes riches et protégez vos pointes avec des coiffures protectrices. 
+    
+    Entretenez mieux vos cheveux 🏃‍♀️‍➡️🏃‍♀️‍➡️👉 https://ndeyecoiffure.fr/formations-tresses/ 
+    
+    Explorez d'autres modèles de cheveux 👉👉https://ndeyecoiffure.fr/shooting-photos/'''
 }
 
 hair_types = list(hair_suggestions.keys())
