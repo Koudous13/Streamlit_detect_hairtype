@@ -3,8 +3,6 @@ import tensorflow as tf
 import numpy as np
 from PIL import Image
 import io
-import cv2
-from streamlit_webrtc import VideoTransformerBase, webrtc_streamer
 import plotly.graph_objects as go
 
 # Charger le modèle
@@ -78,22 +76,7 @@ if capture_mode == "Télécharger une image":
     if uploaded_file:
         image_data = uploaded_file.read()
 else:
-    class VideoTransformer(VideoTransformerBase):
-        def transform(self, frame):
-            img = frame.to_ndarray(format="bgr24")
-            return cv2.flip(img, 1)
-    
-    webrtc_ctx = webrtc_streamer(
-        key="example",
-        video_transformer_factory=VideoTransformer,
-        async_processing=True
-    )
-    if webrtc_ctx and webrtc_ctx.video_transformer:
-        frame = webrtc_ctx.video_transformer.frame
-        if frame is not None:
-            image_data = cv2.imencode(".jpg", frame)[1].tobytes()
-        else:
-            image_data = None
+    return 0
 
 if 'image_data' in locals() and image_data:
     # Prédire le type de cheveux
