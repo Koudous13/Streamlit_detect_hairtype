@@ -65,7 +65,7 @@ st.subheader("Exemples de photos :")
 col1, col2 = st.columns(2)
 
 # Images existantes
-photos = ["photo1.jpg", "photo2.jpg", "photo3.jpg", "photo4.jpg"]
+photos = ["00cbad1ffe22d900018e5a2e7376daed4.jpg","1-rihanna-dreadlocks.jpg","2e59669ba7b07d544b21756269dd9616.jpg","90ddc46b2d0fc908f90205bc54235783.jpg"]
 
 with col1:
     st.image(photos[0], caption="Photo 1", use_column_width=True)
