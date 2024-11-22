@@ -2,7 +2,6 @@ import streamlit as st
 import tensorflow as tf
 import numpy as np
 from PIL import Image
-import io
 import plotly.graph_objects as go
 
 # Charger le modèle
@@ -12,49 +11,43 @@ model = tf.saved_model.load(model_path)
 # Mapping des types de cheveux et des suggestions
 hair_suggestions = {
     "Cheveux Bouclés": '''
-    Hydratez vos boucles avec des produits sans sulfate et définissez-les avec un diffuseur. 
-    
-    Entretenez mieux vos cheveux 🏃‍♀️‍➡️🏃‍♀️‍➡️👉 https://ndeyecoiffure.fr/formations-tresses/ 
-    
-    Explorez d'autres modèles de cheveux 👉👉https://ndeyecoiffure.fr/shooting-photos/'''
-    ,
-    "Cheveux Raides": ''' 
-    Boostez leur éclat avec un sérum lissant et protégez-les contre la chaleur avant tout coiffage. 
-    
-    Entretenez mieux vos cheveux 🏃‍♀️‍➡️🏃‍♀️‍➡️👉 https://ndeyecoiffure.fr/formations-tresses/ 
-    
-    Explorez d'autres modèles de cheveux 👉👉https://ndeyecoiffure.fr/shooting-photos/''',
-    
-    "Cheveux Souples ou Ondulés": ''' 
-    Ajoutez du volume avec une mousse légère et définissez vos ondulations avec des sprays texturisants. 
-    
-    Entretenez mieux vos cheveux 🏃‍♀️‍➡️🏃‍♀️‍➡️👉 https://ndeyecoiffure.fr/formations-tresses/ 
-    
-    Explorez d'autres modèles de cheveux 👉👉https://ndeyecoiffure.fr/shooting-photos/''',
-    
-    "Dreadlocks": ''' 
-    Lavez-les régulièrement avec un shampooing doux et hydratez vos racines pour des locks saines et brillantes. 
-    
-    Entretenez mieux vos cheveux 🏃‍♀️‍➡️🏃‍♀️‍➡️👉 https://ndeyecoiffure.fr/formations-tresses/ 
-    
-    Explorez d'autres modèles de cheveux 👉👉https://ndeyecoiffure.fr/shooting-photos/''' ,
-    
-    "Cheveux Crépus": ''' 
-    Hydratez intensément avec des crèmes riches et protégez vos pointes avec des coiffures protectrices. 
-    
-    Entretenez mieux vos cheveux 🏃‍♀️‍➡️🏃‍♀️‍➡️👉 https://ndeyecoiffure.fr/formations-tresses/ 
-    
-    Explorez d'autres modèles de cheveux 👉👉https://ndeyecoiffure.fr/shooting-photos/'''
+    Les cheveux bouclés nécessitent une hydratation régulière avec des produits adaptés pour éviter la sécheresse.  
+    * Utilisez des produits sans sulfate pour préserver la texture naturelle.  
+    * Séchez vos cheveux avec un diffuseur pour maintenir la définition des boucles.  
+    Découvrez nos formations pour entretenir vos cheveux ici : [Formations Tresses](https://ndeyecoiffure.fr/formations-tresses).  
+    ''',
+    "Cheveux Raides": '''
+    Les cheveux raides bénéficient d'un entretien simple mais doivent être protégés contre les agressions externes.  
+    * Appliquez un sérum lissant pour un effet brillant et naturel.  
+    * Protégez-les avec un spray thermique avant tout coiffage.  
+    Accédez à nos conseils d'entretien ici : [Formations Tresses](https://ndeyecoiffure.fr/formations-tresses).  
+    ''',
+    "Cheveux Souples ou Ondulés": '''
+    Les cheveux souples ou ondulés nécessitent des soins pour conserver leur volume et texture naturelle.  
+    * Utilisez une mousse légère pour apporter du volume.  
+    * Appliquez un spray texturisant pour définir les ondulations.  
+    Découvrez plus de conseils sur : [Formations Tresses](https://ndeyecoiffure.fr/formations-tresses).  
+    ''',
+    "Dreadlocks": '''
+    Les dreadlocks requièrent un entretien spécifique pour rester saines et brillantes.  
+    * Nettoyez-les régulièrement avec un shampoing doux.  
+    * Hydratez vos racines pour éviter les démangeaisons.  
+    Découvrez nos formations ici : [Formations Tresses](https://ndeyecoiffure.fr/formations-tresses).  
+    ''',
+    "Cheveux Crépus": '''
+    Les cheveux crépus doivent être hydratés intensément pour prévenir la casse.  
+    * Utilisez des crèmes riches et des huiles pour maintenir l'humidité.  
+    * Adoptez des coiffures protectrices pour protéger vos pointes.  
+    Retrouvez nos conseils ici : [Formations Tresses](https://ndeyecoiffure.fr/formations-tresses).  
+    '''
 }
 
 hair_types = list(hair_suggestions.keys())
 
 # Fonction pour prédire le type de cheveux
-def predict_hair_type(image_data):
+def predict_hair_type(image):
     # Prétraiter l'image pour le modèle
-    image = Image.open(io.BytesIO(image_data)).convert("RGB")
     image = image.resize((224, 224))
-    #img_array = np.array(image) / 255.0
     img_array = np.expand_dims(image, axis=0).astype(np.float32)
 
     # Prédiction avec le modèle
@@ -66,47 +59,54 @@ def predict_hair_type(image_data):
 
 # Interface Streamlit
 st.title("✨ Analyseur de Type de Cheveux ✨")
-st.write("Chargez une image ou prenez une photo pour découvrir le type de cheveux et recevoir des conseils personnalisés.")
 
-# Capture via caméra ou téléchargement
-capture_mode = st.radio("Mode de saisie :", ("Télécharger une image"))
+# Affichage des 4 images fixes
+st.subheader("Exemples de photos :")
+col1, col2 = st.columns(2)
 
-if capture_mode == "Télécharger une image":
-    uploaded_file = st.file_uploader("Choisissez une image", type=["jpg", "jpeg", "png"])
-    if uploaded_file:
-        image_data = uploaded_file.read()
-if 'image_data' in locals() and image_data:
+# Images existantes
+photos = ["photo1.jpg", "photo2.jpg", "photo3.jpg", "photo4.jpg"]
+
+with col1:
+    st.image(photos[0], caption="Photo 1", use_column_width=True)
+    st.image(photos[1], caption="Photo 2", use_column_width=True)
+
+with col2:
+    st.image(photos[2], caption="Photo 3", use_column_width=True)
+    st.image(photos[3], caption="Photo 4", use_column_width=True)
+
+# Téléchargement de l'image
+st.subheader("Veuillez choisir une photo depuis votre galerie :")
+uploaded_file = st.file_uploader("Importer une photo", type=["jpg", "jpeg", "png"])
+
+if uploaded_file is not None:
+    # Charger l'image
+    image_data = Image.open(uploaded_file)
+
     # Prédire le type de cheveux
-    try:
-        hair_type, confidence = predict_hair_type(image_data)
+    hair_type, confidence = predict_hair_type(image_data)
 
-        # Layout avec image et graphique côte à côte
-        col1, col2 = st.columns(2)
+    # Layout avec image et graphique côte à côte
+    col1, col2 = st.columns(2)
 
-        # Afficher l'image
-        with col1:
-            st.image(image_data, caption="Image analysée", use_column_width=True)
+    # Afficher l'image téléchargée
+    with col1:
+        st.image(image_data, caption="Image téléchargée", use_column_width=True)
 
-        # Créer un graphique avec Plotly
-        with col2:
-            fig = go.Figure(go.Indicator(
-                mode="gauge+number",
-                value=confidence,
-                title={"text": "Confiance (%)"},
-                gauge={"axis": {"range": [0, 100]},
-                       "bar": {"color": "darkblue"}}
-            ))
-            fig.update_layout(height=300, width=300)
-            st.plotly_chart(fig, use_container_width=True)
+    # Créer un graphique avec Plotly
+    with col2:
+        fig = go.Figure(go.Indicator(
+            mode="gauge+number",
+            value=confidence,
+            title={"text": "Confiance (%)"},
+            gauge={"axis": {"range": [0, 100]},
+                   "bar": {"color": "darkblue"}}
+        ))
+        fig.update_layout(height=300, width=300)
+        st.plotly_chart(fig, use_container_width=True)
 
-        # Afficher le texte avec certitude
-        st.markdown(f"<h3 style='text-align: center;'>Je suis certain à {confidence:.2f} % de ma prédiction</h3>", unsafe_allow_html=True)
-
-        # Afficher les suggestions
-        st.subheader(f"Type de Cheveux : {hair_type}")
-        st.write(hair_suggestions[hair_type])
-
-    except Exception as e:
-        st.error(f"Une erreur est survenue lors de l'analyse : {e}")
+    # Afficher le type de cheveux et les suggestions
+    st.subheader(f"Type de Cheveux : {hair_type}")
+    st.write(hair_suggestions[hair_type])
 else:
-    st.info("Veuillez télécharger une image ou prendre une photo pour commencer.")
+    st.info("Veuillez importer une photo pour commencer l'analyse.")
