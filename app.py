@@ -62,18 +62,17 @@ st.title("✨ Analyseur de Type de Cheveux ✨")
 
 # Affichage des 4 images fixes
 st.subheader("Exemples de photos :")
-col1, col2 = st.columns(2)
+example_images = [
+    "00cbad1ffe22d900018e5a2e7376daed4.jpg",
+    "1-rihanna-dreadlocks.jpg",
+    "2e59669ba7b07d544b21756269dd9616.jpg",
+    "90ddc46b2d0fc908f90205bc54235783.jpg"
+]
 
-# Images existantes
-photos = ["00cbad1ffe22d900018e5a2e7376daed4.jpg","1-rihanna-dreadlocks.jpg","2e59669ba7b07d544b21756269dd9616.jpg","90ddc46b2d0fc908f90205bc54235783.jpg"]
-
-with col1:
-    st.image(photos[0], caption="Photo 1", use_column_width=True)
-    st.image(photos[1], caption="Photo 2", use_column_width=True)
-
-with col2:
-    st.image(photos[2], caption="Photo 3", use_column_width=True)
-    st.image(photos[3], caption="Photo 4", use_column_width=True)
+cols = st.columns(4)
+for col, image_path in zip(cols, example_images):
+    with col:
+        st.image(image_path, caption="Exemple", use_column_width=True)
 
 # Téléchargement de l'image
 st.subheader("Veuillez choisir une photo depuis votre galerie :")
@@ -107,6 +106,15 @@ if uploaded_file is not None:
 
     # Afficher le type de cheveux et les suggestions
     st.subheader(f"Type de Cheveux : {hair_type}")
-    st.write(hair_suggestions[hair_type])
+
+    # Présenter les suggestions en 2 colonnes
+    suggestions = hair_suggestions[hair_type].split("\n")
+    col1, col2 = st.columns(2)
+    with col1:
+        for i in suggestions[::2]:
+            st.write(i)
+    with col2:
+        for i in suggestions[1::2]:
+            st.write(i)
 else:
     st.info("Veuillez importer une photo pour commencer l'analyse.")
