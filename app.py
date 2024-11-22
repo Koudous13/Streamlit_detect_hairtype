@@ -58,11 +58,11 @@ def predict_hair_type(image):
     return hair_types[predicted_index], probabilities[predicted_index] * 100
 
 # Interface Streamlit
-st.title("✨ Analyseur de Type de Cheveux ✨")
+st.title("✨ Analysez vos Cheveux ✨")
 
 # Affichage des 4 images fixes
 # Affichage des 4 images fixes
-st.subheader("Exemples de photos :")
+st.subheader("PRENEZ DES PHOTOS CLAIRES :")
 col1, col2 = st.columns(2)
 
 # Images existantes
@@ -70,14 +70,14 @@ photos = ["0.jpg","1.jpg","2.jpg","3.jpg"]
 
 with col1:
     st.image(photos[0], caption="Photo 1", use_column_width=True)
-    st.image(photos[1], caption="Photo 2", use_column_width=True)
+    st.image(photos[1], caption="Photo 3", use_column_width=True)
 
 with col2:
-    st.image(photos[2], caption="Photo 3", use_column_width=True)
+    st.image(photos[2], caption="Photo 2", use_column_width=True)
     st.image(photos[3], caption="Photo 4", use_column_width=True)
 
 # Téléchargement de l'image
-st.subheader("Veuillez choisir une photo depuis votre galerie :")
+st.subheader("COMMENCEZ EN PRENANT UNE PHOTO DEPUIS VOTRE GALERIE :")
 uploaded_file = st.file_uploader("Importer une photo", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
@@ -107,7 +107,7 @@ if uploaded_file is not None:
         st.plotly_chart(fig, use_container_width=True)
 
     # Afficher le type de cheveux et les suggestions
-    st.subheader(f"Type de Cheveux : {hair_type}")
+    #st.subheader(f"Type de Cheveux : {hair_type}")
 
     # Présenter les suggestions en 2 colonnes
     suggestions = hair_suggestions[hair_type].split("\n")
@@ -117,11 +117,9 @@ if uploaded_file is not None:
         st.write(f''' 
             Les cheveux identifiés sont de type {hair_type}, une catégorie reconnue pour ses caractéristiques distinctives et sa structure unique.
 
-            Ce type de chevelure exige une attention particulière pour préserver son éclat naturel et sa vitalité.
-
-            Les {hair_type} se démarquent par leur texture et leur réaction aux soins, nécessitant des produits et des routines adaptés pour maintenir leur santé et leur beauté.
+            Ce type de chevelure exige une attention particulière pour préserver son éclat naturel et sa vitalité.            
             
-            Grâce à une approche personnalisée et des pratiques capillaires adaptées, il est possible de maximiser leur potentiel esthétique tout en assurant une protection durable.''')            
+            Grâce à une approche personnalisée et des pratiques capillaires adaptées, il est possible de maximiser leur potentiel esthétique !.''')            
     with col2:
         st.subheader("ENJEUX ET SOLUTIONS ")
         for i in suggestions:
