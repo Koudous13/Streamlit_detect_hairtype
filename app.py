@@ -113,10 +113,18 @@ if uploaded_file is not None:
     suggestions = hair_suggestions[hair_type].split("\n")
     col1, col2 = st.columns(2)
     with col1:
-        for i in suggestions[::2]:
-            st.write(i)
+        st.subheader("ANALYSE DES CHEVEUX")
+        st.write(f''' 
+            Les cheveux identifiés sont de type {hair_type}, une catégorie reconnue pour ses caractéristiques distinctives et sa structure unique.
+
+            Ce type de chevelure exige une attention particulière pour préserver son éclat naturel et sa vitalité.
+
+            Les {hair_type} se démarquent par leur texture et leur réaction aux soins, nécessitant des produits et des routines adaptés pour maintenir leur santé et leur beauté.
+            
+            Grâce à une approche personnalisée et des pratiques capillaires adaptées, il est possible de maximiser leur potentiel esthétique tout en assurant une protection durable.''')            
     with col2:
-        for i in suggestions[1::2]:
+        st.subheader("ENJEUX ET SOLUTIONS ")
+        for i in suggestions:
             st.write(i)
 else:
     st.info("Veuillez importer une photo pour commencer l'analyse.")
