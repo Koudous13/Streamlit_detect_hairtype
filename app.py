@@ -61,18 +61,20 @@ def predict_hair_type(image):
 st.title("✨ Analyseur de Type de Cheveux ✨")
 
 # Affichage des 4 images fixes
+# Affichage des 4 images fixes
 st.subheader("Exemples de photos :")
-example_images = [
-    "00cbad1ffe22d900018e5a2e7376daed4.jpg",
-    "1-rihanna-dreadlocks.jpg",
-    "2e59669ba7b07d544b21756269dd9616.jpg",
-    "90ddc46b2d0fc908f90205bc54235783.jpg"
-]
+col1, col2 = st.columns(2)
 
-cols = st.columns(4)
-for col, image_path in zip(cols, example_images):
-    with col:
-        st.image(image_path, caption="Exemple", use_column_width=True)
+# Images existantes
+photos = ["0.jpg","1.jpg","2.jpg","3.jpg"]
+
+with col1:
+    st.image(photos[0], caption="Photo 1", use_column_width=True)
+    st.image(photos[1], caption="Photo 2", use_column_width=True)
+
+with col2:
+    st.image(photos[2], caption="Photo 3", use_column_width=True)
+    st.image(photos[3], caption="Photo 4", use_column_width=True)
 
 # Téléchargement de l'image
 st.subheader("Veuillez choisir une photo depuis votre galerie :")
