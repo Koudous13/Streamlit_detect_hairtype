@@ -78,7 +78,7 @@ with col2:
 
 # Téléchargement de l'image
 st.subheader("COMMENCEZ EN PRENANT UNE PHOTO DEPUIS VOTRE GALERIE :")
-uploaded_file = st.file_uploader("Importer une photo", type=["jpg", "jpeg", "png"])
+uploaded_file = st.file_uploader("Importer une photo", type=["jpg", "jpeg"])
 
 if uploaded_file is not None:
     # Charger l'image
