@@ -11,24 +11,34 @@ model = tf.saved_model.load(model_path)
 # Mapping des types de cheveux et des suggestions
 hair_suggestions = {
     "Cheveux Bouclés": '''
-    * Hydratez régulièrement avec des produits sans sulfate.  
-    * Séchez vos cheveux avec un diffuseur pour des boucles définies.  
+    Les cheveux bouclés nécessitent une hydratation régulière avec des produits adaptés pour éviter la sécheresse.  
+    * Utilisez des produits sans sulfate pour préserver la texture naturelle.  
+    * Séchez vos cheveux avec un diffuseur pour maintenir la définition des boucles.  
+    Découvrez nos formations pour entretenir vos cheveux ici : [Formations Tresses](https://ndeyecoiffure.fr/formations-tresses).  
     ''',
     "Cheveux Raides": '''
-    * Appliquez un sérum pour un effet brillant.  
-    * Protégez avec un spray thermique avant le coiffage.  
+    Les cheveux raides bénéficient d'un entretien simple mais doivent être protégés contre les agressions externes.  
+    * Appliquez un sérum lissant pour un effet brillant et naturel.  
+    * Protégez-les avec un spray thermique avant tout coiffage.  
+    Accédez à nos conseils d'entretien ici : [Formations Tresses](https://ndeyecoiffure.fr/formations-tresses).  
     ''',
     "Cheveux Souples ou Ondulés": '''
-    * Utilisez une mousse légère pour le volume.  
+    Les cheveux souples ou ondulés nécessitent des soins pour conserver leur volume et texture naturelle.  
+    * Utilisez une mousse légère pour apporter du volume.  
     * Appliquez un spray texturisant pour définir les ondulations.  
+    Découvrez plus de conseils sur : [Formations Tresses](https://ndeyecoiffure.fr/formations-tresses).  
     ''',
     "Dreadlocks": '''
-    * Nettoyez régulièrement avec un shampoing doux.  
-    * Hydratez les racines pour éviter les démangeaisons.  
+    Les dreadlocks requièrent un entretien spécifique pour rester saines et brillantes.  
+    * Nettoyez-les régulièrement avec un shampoing doux.  
+    * Hydratez vos racines pour éviter les démangeaisons.  
+    Découvrez nos formations ici : [Formations Tresses](https://ndeyecoiffure.fr/formations-tresses).  
     ''',
     "Cheveux Crépus": '''
-    * Hydratez intensément avec des huiles riches.  
-    * Adoptez des coiffures protectrices pour préserver vos pointes.  
+    Les cheveux crépus doivent être hydratés intensément pour prévenir la casse.  
+    * Utilisez des crèmes riches et des huiles pour maintenir l'humidité.  
+    * Adoptez des coiffures protectrices pour protéger vos pointes.  
+    Retrouvez nos conseils ici : [Formations Tresses](https://ndeyecoiffure.fr/formations-tresses).  
     '''
 }
 
@@ -50,23 +60,24 @@ def predict_hair_type(image):
 # Interface Streamlit
 st.title("✨ Analysez vos Cheveux ✨")
 
-# Affichage des 4 images fixes avec une taille adaptée
-st.subheader("📸 Prenez des photos claires :")
+# Affichage des 4 images fixes
+# Affichage des 4 images fixes
+st.subheader("PRENEZ DES PHOTOS CLAIRES :")
 col1, col2 = st.columns(2)
 
 # Images existantes
-photos = ["00.jpg", "01.jpg", "02.jpg", "03.jpg"]
+photos = ["00.jpg","01.jpg","02.jpg","03.jpg"]
 
 with col1:
-    st.image(photos[0], caption="Photo 1", use_column_width=True, width=150)
-    st.image(photos[1], caption="Photo 2", use_column_width=True, width=150)
+    st.image(photos[0], caption="Photo 1", use_column_width=True,width=50)
+    st.image(photos[1], caption="Photo 3", use_column_width=True,width=50)
 
 with col2:
-    st.image(photos[2], caption="Photo 3", use_column_width=True, width=150)
-    st.image(photos[3], caption="Photo 4", use_column_width=True, width=150)
+    st.image(photos[2], caption="Photo 2", use_column_width=True,width=50)
+    st.image(photos[3], caption="Photo 4", use_column_width=True,width=50)
 
 # Téléchargement de l'image
-st.subheader("📂 Importez une photo de votre galerie :")
+st.subheader("COMMENCEZ EN PRENANT UNE PHOTO DEPUIS VOTRE GALERIE :")
 uploaded_file = st.file_uploader("Importer une photo", type=["jpg", "jpeg"])
 
 if uploaded_file is not None:
@@ -77,7 +88,7 @@ if uploaded_file is not None:
     hair_type, confidence = predict_hair_type(image_data)
 
     # Layout avec image et graphique côte à côte
-    col1, col2 = st.columns([1, 1.2])
+    col1, col2 = st.columns(2)
 
     # Afficher l'image téléchargée
     with col1:
@@ -92,12 +103,26 @@ if uploaded_file is not None:
             gauge={"axis": {"range": [0, 100]},
                    "bar": {"color": "darkblue"}}
         ))
-        fig.update_layout(height=200, width=200)
+        fig.update_layout(height=300, width=300)
         st.plotly_chart(fig, use_container_width=True)
 
-    # Présenter les résultats
-    st.subheader(f"💇‍♀️ Type de Cheveux : {hair_type}")
-    st.markdown(f"**Suggestions :** {hair_suggestions[hair_type]}")
+    # Afficher le type de cheveux et les suggestions
+    #st.subheader(f"Type de Cheveux : {hair_type}")
 
+    # Présenter les suggestions en 2 colonnes
+    suggestions = hair_suggestions[hair_type].split("\n")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.subheader("ANALYSE DES CHEVEUX")
+        st.write(f''' 
+            Les cheveux identifiés sont de type {hair_type}, une catégorie reconnue pour ses caractéristiques distinctives et sa structure unique.
+
+            Ce type de chevelure exige une attention particulière pour préserver son éclat naturel et sa vitalité.            
+            
+            Grâce à une approche personnalisée et des pratiques capillaires adaptées, il est possible de maximiser leur potentiel esthétique !.''')            
+    with col2:
+        st.subheader("ENJEUX ET SOLUTIONS ")
+        for i in suggestions:
+            st.write(i)
 else:
     st.info("Veuillez importer une photo pour commencer l'analyse.")
