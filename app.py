@@ -5,13 +5,11 @@ from PIL import Image
 import plotly.graph_objects as go
 
 # Cache pour le chargement du modèle
-@st.cache_resource
-def load_model():
-    model_path = "bestyYYmodelhair/"
-    return tf.saved_model.load(model_path)
+#@st.cache_resource
+#def load_model():
+model_path = "bestyYYmodelhair/"
+model= tf.saved_model.load(model_path)
 
-# Charger le modèle une seule fois
-model = load_model()
 
 # Mapping des types de cheveux et des suggestions
 hair_suggestions = {
