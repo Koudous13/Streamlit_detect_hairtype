@@ -3,29 +3,57 @@ import tensorflow as tf
 import numpy as np
 from PIL import Image
 import plotly.graph_objects as go
+from streamlit_webrtc import webrtc_streamer, VideoTransformerBase
+import cv2
 
-# Charger le modèle
-model_path = "bestyYYmodelhair/"
-model = tf.saved_model.load(model_path)
+# Cache pour le chargement du modèle
+@st.cache_resource
+def load_model():
+    model_path = "bestyYYmodelhair/"
+    return tf.saved_model.load(model_path)
+
+# Charger le modèle une seule fois
+model = load_model()
 
 # Mapping des types de cheveux et des suggestions
 hair_suggestions = {
     "Cheveux Bouclés": '''
-    Les cheveux bouclés nécessitent une hydratation régulière avec des produits adaptés pour éviter la sécheresse.  
-    * Utilisez des produits sans sulfate pour préserver la texture naturelle.  
-    * Séchez vos cheveux avec un diffuseur pour maintenir la définition des boucles.  
+    Caractéristiques : La densité et le volume naturels des cheveux bouclés offrent une base idéale pour des tresses protectrices qui subliment les boucles.
+
+    Recommandations de coiffures tressées :
+
+    Vanilles (Twists) : Parfaites pour protéger et définir les boucles, tout en apportant une touche chic et naturelle.
+
+    Box Braids avec extensions : Un style protecteur emblématique qui combine élégance et polyvalence.
+
+    Tresses collées avec rajouts : Idéales pour contrôler le volume tout en offrant un look sophistiqué. 
+     
     Découvrez nos formations pour entretenir vos cheveux ici : [Formations Tresses](https://ndeyecoiffure.fr/formations-tresses).  
     ''',
     "Cheveux Raides": '''
-    Les cheveux raides bénéficient d'un entretien simple mais doivent être protégés contre les agressions externes.  
-    * Appliquez un sérum lissant pour un effet brillant et naturel.  
-    * Protégez-les avec un spray thermique avant tout coiffage.  
+    Caractéristiques : Naturellement lisses et brillants, les cheveux raides se prêtent à des tresses élégantes qui ajoutent du relief et de la sophistication.
+
+    Recommandations de coiffures tressées :
+
+    Tresse française classique : Une coiffure intemporelle et raffinée qui sublime la fluidité des cheveux raides.
+
+    Box Braids fines avec extensions : Idéales pour ajouter de la texture et jouer avec des styles audacieux.
+    
+    Tresse Ateba : Une touche artistique et colorée pour personnaliser votre look.  
+    
     Accédez à nos conseils d'entretien ici : [Formations Tresses](https://ndeyecoiffure.fr/formations-tresses).  
     ''',
     "Cheveux Souples ou Ondulés": '''
-    Les cheveux souples ou ondulés nécessitent des soins pour conserver leur volume et texture naturelle.  
-    * Utilisez une mousse légère pour apporter du volume.  
-    * Appliquez un spray texturisant pour définir les ondulations.  
+    Caractéristiques : Avec leur ondulation naturelle en "S", les cheveux ondulés donnent du caractère aux tresses et permettent de créer des styles bohèmes et décontractés.
+
+    Recommandations de coiffures tressées :
+
+    Bohemian Braids : Ces tresses rehaussent les ondulations naturelles grâce à des mèches libres qui apportent une touche romantique.
+
+    Butterfly Braids : Volumineuses et spectaculaires, elles jouent avec la texture pour un look audacieux.
+
+    Fulani Braids : Un mélange de tradition et de modernité, enrichies d’accessoires pour accentuer votre style.
+      
     Découvrez plus de conseils sur : [Formations Tresses](https://ndeyecoiffure.fr/formations-tresses).  
     ''',
     "Dreadlocks": '''
@@ -35,9 +63,15 @@ hair_suggestions = {
     Découvrez nos formations ici : [Formations Tresses](https://ndeyecoiffure.fr/formations-tresses).  
     ''',
     "Cheveux Crépus": '''
-    Les cheveux crépus doivent être hydratés intensément pour prévenir la casse.  
-    * Utilisez des crèmes riches et des huiles pour maintenir l'humidité.  
-    * Adoptez des coiffures protectrices pour protéger vos pointes.  
+    Caractéristiques : Les cheveux crépus, avec leur structure serrée et volumineuse, sont parfaits pour des coiffures tressées durables qui célèbrent leur texture unique.
+
+    Recommandations de coiffures tressées :
+
+    Tresses Collées Simples : Une coiffure minimaliste et élégante qui protège efficacement les cheveux.
+
+    Box Braids épaisses : Une option incontournable pour un style audacieux et une protection optimale.
+
+    Vanilles épaisses : Simples à entretenir, elles mettent en valeur la richesse des cheveux crépus tout en maintenant leur hydratation. 
     Retrouvez nos conseils ici : [Formations Tresses](https://ndeyecoiffure.fr/formations-tresses).  
     '''
 }
@@ -57,42 +91,68 @@ def predict_hair_type(image):
     predicted_index = np.argmax(probabilities)
     return hair_types[predicted_index], probabilities[predicted_index] * 100
 
+# Classe pour capturer une image via la caméra
+class VideoTransformer(VideoTransformerBase):
+    def __init__(self):
+        self.image = None
+
+    def transform(self, frame):
+        img = frame.to_ndarray(format="bgr24")  # Conversion en tableau numpy
+        self.image = img  # Stocker l'image capturée
+        return img
+
+
 # Interface Streamlit
 st.title("✨ Analysez vos Cheveux ✨")
 
-# Affichage des 4 images fixes
 # Affichage des 4 images fixes
 st.subheader("PRENEZ DES PHOTOS CLAIRES :")
 col1, col2 = st.columns(2)
 
 # Images existantes
-photos = ["00.jpg","01.jpg","02.jpg","03.jpg"]
+photos = ["00.jpg", "01.jpg", "02.jpg", "03.jpg"]
 
 with col1:
-    st.image(photos[0], caption="Photo 1", use_column_width=True,width=50)
-    st.image(photos[1], caption="Photo 3", use_column_width=True,width=50)
+    st.image(photos[0], caption="Photo 1", use_container_width=True)
+    st.image(photos[1], caption="Photo 3", use_container_width=True)
 
 with col2:
-    st.image(photos[2], caption="Photo 2", use_column_width=True,width=50)
-    st.image(photos[3], caption="Photo 4", use_column_width=True,width=50)
+    st.image(photos[2], caption="Photo 2", use_container_width=True)
+    st.image(photos[3], caption="Photo 4", use_container_width=True)
 
-# Téléchargement de l'image
-st.subheader("COMMENCEZ EN PRENANT UNE PHOTO DEPUIS VOTRE GALERIE :")
-uploaded_file = st.file_uploader("Importer une photo", type=["jpg", "jpeg"])
+# Section pour télécharger ou capturer une image
+st.subheader("COMMENCEZ EN PRENANT UNE PHOTO :")
+image_data = None
+
+# Option pour utiliser la caméra
+st.subheader("Prenez une photo avec votre caméra :")
+webrtc_ctx = webrtc_streamer(
+    key="camera", 
+    video_transformer_factory=VideoTransformer, 
+    media_stream_constraints={"video": True, "audio": False},
+)
+
+if webrtc_ctx.video_transformer and webrtc_ctx.video_transformer.image is not None:
+    # Conversion de l'image capturée par la caméra
+    image_data = Image.fromarray(webrtc_ctx.video_transformer.image)
+
+# Option pour télécharger une image
+uploaded_file = st.file_uploader("Ou téléchargez une photo", type=["jpg", "jpeg"])
 
 if uploaded_file is not None:
-    # Charger l'image
     image_data = Image.open(uploaded_file)
 
+# Si une image est disponible
+if image_data:
     # Prédire le type de cheveux
     hair_type, confidence = predict_hair_type(image_data)
 
     # Layout avec image et graphique côte à côte
     col1, col2 = st.columns(2)
 
-    # Afficher l'image téléchargée
+    # Afficher l'image téléchargée ou capturée
     with col1:
-        st.image(image_data, caption="Image téléchargée", use_column_width=True)
+        st.image(image_data, caption="Image analysée", use_container_width=True)
 
     # Créer un graphique avec Plotly
     with col2:
@@ -107,22 +167,7 @@ if uploaded_file is not None:
         st.plotly_chart(fig, use_container_width=True)
 
     # Afficher le type de cheveux et les suggestions
-    #st.subheader(f"Type de Cheveux : {hair_type}")
-
-    # Présenter les suggestions en 2 colonnes
-    suggestions = hair_suggestions[hair_type].split("\n")
-    col1, col2 = st.columns(2)
-    with col1:
-        st.subheader("ANALYSE DES CHEVEUX")
-        st.write(f''' 
-            Les cheveux identifiés sont de type {hair_type}, une catégorie reconnue pour ses caractéristiques distinctives et sa structure unique.
-
-            Ce type de chevelure exige une attention particulière pour préserver son éclat naturel et sa vitalité.            
-            
-            Grâce à une approche personnalisée et des pratiques capillaires adaptées, il est possible de maximiser leur potentiel esthétique !.''')            
-    with col2:
-        st.subheader("ENJEUX ET SOLUTIONS ")
-        for i in suggestions:
-            st.write(i)
+    st.subheader(f"Type de Cheveux : {hair_type}")
+    st.write(hair_suggestions[hair_type])
 else:
-    st.info("Veuillez importer une photo pour commencer l'analyse.")
+    st.info("Veuillez importer ou capturer une photo pour commencer l'analyse.")
