@@ -116,32 +116,11 @@ image_data = None
 
 
 # Test de la caméra
-# Fonction pour capturer l'image de la caméra et l'afficher dans Streamlit
-def capture_image_from_camera():
-    # Ouvrir la caméra
-    cap = cv2.VideoCapture(0)
+photo = st.camera_input("Cliquez pour prendre une photo")
 
-    if not cap.isOpened():
-        st.error("Impossible d'ouvrir la caméra.")
-        return None
-
-    st.text("Appuyez sur 'Q' pour arrêter la capture.")
-
-    # Lire une image
-    ret, frame = cap.read()
-
-    if ret:
-        # Convertir l'image pour l'afficher dans Streamlit
-        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        st.image(frame_rgb, channels="RGB", caption="Image Capturée", use_container_width=True)
-    
-    cap.release()
-
-# Affichage dans Streamlit
-st.title("Capture de Photo avec la Caméra")
-if st.button("Prendre une Photo"):
-    capture_image_from_camera()
-
+if photo is not None:
+    # Charger l'image capturée
+    image_data = Image.open(photo)
 
 # Option pour télécharger une image
 uploaded_file = st.file_uploader("Importer une photo ou capturer via votre webcam", type=["jpg", "jpeg"], accept_multiple_files=False, label_visibility="visible")
