@@ -117,27 +117,31 @@ image_data = None
 
 
 # Test de la caméra
-cap = cv2.VideoCapture(0)  # Index 0 pour la caméra par défaut
+# Fonction pour capturer l'image de la caméra et l'afficher dans Streamlit
+def capture_image_from_camera():
+    # Ouvrir la caméra
+    cap = cv2.VideoCapture(0)
 
-if not cap.isOpened():
-    print("⚠️ Impossible d'accéder à la caméra. Vérifiez si elle est connectée et fonctionnelle.")
-else:
-    print("🎥 La caméra fonctionne ! Appuyez sur 'Q' pour quitter.")
+    if not cap.isOpened():
+        st.error("Impossible d'ouvrir la caméra.")
+        return None
 
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            print("⚠️ Échec de la lecture du flux vidéo.")
-            break
+    st.text("Appuyez sur 'Q' pour arrêter la capture.")
 
-        cv2.imshow("Flux vidéo", frame)
+    # Lire une image
+    ret, frame = cap.read()
 
-        # Quitter avec la touche 'Q'
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+    if ret:
+        # Convertir l'image pour l'afficher dans Streamlit
+        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        st.image(frame_rgb, channels="RGB", caption="Image Capturée", use_container_width=True)
+    
+    cap.release()
 
-cap.release()
-cv2.destroyAllWindows()
+# Affichage dans Streamlit
+st.title("Capture de Photo avec la Caméra")
+if st.button("Prendre une Photo"):
+    capture_image_from_camera()
 
 
 # Option pour télécharger une image
