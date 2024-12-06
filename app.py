@@ -3,7 +3,6 @@ import tensorflow as tf
 import numpy as np
 from PIL import Image
 import plotly.graph_objects as go
-import cv2
 
 # Cache pour le chargement du modèle
 @st.cache_resource
