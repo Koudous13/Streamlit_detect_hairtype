@@ -5,10 +5,12 @@ from PIL import Image
 import plotly.graph_objects as go
 
 # Cache pour le chargement du modèle
-#@st.cache_resource
-#def load_model():
-model_path = "bestyYYmodelhair/"
-model= tf.saved_model.load(model_path)
+@st.cache_resource
+def load_model():
+    model_path = "bestyYYmodelhair/"
+    return tf.saved_model.load(model_path)
+
+model=load_model()
 
 
 # Mapping des types de cheveux et des suggestions
@@ -120,7 +122,7 @@ if photo is not None:
     image_data = Image.open(photo)
 
 # Option pour télécharger une image
-uploaded_file = st.file_uploader("Importer une photo ou capturer via votre webcam", type=["jpg", "jpeg"], accept_multiple_files=False, label_visibility="visible")
+uploaded_file = st.file_uploader("Ou importer une photo", type=["jpg", "jpeg"], accept_multiple_files=False, label_visibility="visible")
 
 #uploaded_file = st.file_uploader("Ou téléchargez une photo", type=["jpg", "jpeg"])
 
