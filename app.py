@@ -120,12 +120,10 @@ photo = st.camera_input("Cliquez pour prendre une photo")
 if photo is not None:
     # Charger l'image capturée
     image_data = Image.open(photo)
+    image_data = image_data.convert("RGB")  # S'assurer que l'image est en RGB
 
 # Option pour télécharger une image
 uploaded_file = st.file_uploader("Ou importer une photo", type=["jpg", "jpeg"], accept_multiple_files=False, label_visibility="visible")
-
-#uploaded_file = st.file_uploader("Ou téléchargez une photo", type=["jpg", "jpeg"])
-
 if uploaded_file is not None:
     image_data = Image.open(uploaded_file)
 
