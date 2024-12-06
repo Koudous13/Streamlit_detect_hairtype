@@ -114,25 +114,32 @@ with col2:
 # Section pour télécharger ou capturer une image
 st.subheader("COMMENCEZ EN PRENANT UNE PHOTO :")
 image_data = None
-# Activation de la caméra
-camera = cv2.VideoCapture(0)  # Index 0 pour la caméra par défaut
 
-# Widget pour activer la capture
-capture_button = st.button("📸 Prendre une photo")
 
-if capture_button:
-    ret, frame = camera.read()
-    if ret:
-        # Convertir l'image en format PIL pour affichage dans Streamlit
-        image = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
-        st.image(image, caption="Photo capturée", use_column_width=True)
-        
-        # Exemple d'action supplémentaire
-        st.success("🎉 Photo capturée avec succès ! Vous pouvez maintenant l'analyser.")
-    else:
-        st.error("⚠️ Échec de la capture. Assurez-vous que la caméra est activée et accessible.")
+# Test de la caméra
+cap = cv2.VideoCapture(0)  # Index 0 pour la caméra par défaut
 
-camera.release()
+if not cap.isOpened():
+    print("⚠️ Impossible d'accéder à la caméra. Vérifiez si elle est connectée et fonctionnelle.")
+else:
+    print("🎥 La caméra fonctionne ! Appuyez sur 'Q' pour quitter.")
+
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            print("⚠️ Échec de la lecture du flux vidéo.")
+            break
+
+        cv2.imshow("Flux vidéo", frame)
+
+        # Quitter avec la touche 'Q'
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+cap.release()
+cv2.destroyAllWindows()
+
+
 # Option pour télécharger une image
 uploaded_file = st.file_uploader("Importer une photo ou capturer via votre webcam", type=["jpg", "jpeg"], accept_multiple_files=False, label_visibility="visible")
 
