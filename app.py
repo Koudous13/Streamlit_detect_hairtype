@@ -114,49 +114,11 @@ with col2:
 # Section pour télécharger ou capturer une image
 st.subheader("COMMENCEZ EN PRENANT UNE PHOTO :")
 image_data = None
-# HTML pour accéder à la caméra
-st.markdown(
-    """
-    <div style="text-align:center;">
-        <p>Appuyez sur le bouton pour capturer une image depuis votre webcam :</p>
-        <video id="video" autoplay playsinline style="border: 2px solid #ccc; border-radius: 10px; width: 100%; max-width: 300px;"></video>
-        <br>
-        <button id="capture" style="margin-top: 10px;">Prendre une photo</button>
-        <canvas id="canvas" style="display:none;"></canvas>
-        <form method="post" enctype="multipart/form-data">
-            <input id="upload" type="file" accept="image/*" capture="camera" style="margin-top: 10px;">
-        </form>
-        <script>
-            const video = document.getElementById('video');
-            const canvas = document.getElementById('canvas');
-            const captureButton = document.getElementById('capture');
-            const uploadButton = document.getElementById('upload');
-
-            // Accéder à la caméra
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then((stream) => {
-                    video.srcObject = stream;
-                })
-                .catch((error) => {
-                    console.error('Erreur lors de l\'accès à la caméra:', error);
-                });
-
-            captureButton.addEventListener('click', () => {
-                const context = canvas.getContext('2d');
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                const imageData = canvas.toDataURL('image/png');
-                uploadButton.src = imageData;
-            });
-        </script>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
 
 # Option pour télécharger une image
-uploaded_file = st.file_uploader("Ou téléchargez une photo", type=["jpg", "jpeg"])
+uploaded_file = st.file_uploader("Importer une photo ou capturer via votre webcam", type=["jpg", "jpeg"], accept_multiple_files=False, label_visibility="visible")
+
+#uploaded_file = st.file_uploader("Ou téléchargez une photo", type=["jpg", "jpeg"])
 
 if uploaded_file is not None:
     image_data = Image.open(uploaded_file)
