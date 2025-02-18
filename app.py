@@ -3,7 +3,23 @@ import tensorflow as tf
 import numpy as np
 from PIL import Image
 import plotly.graph_objects as go
+from transformers import TFCLIPModel, CLIPProcessor
 
+# Load the CLIP model and processor (this was missing)
+clip_model = TFCLIPModel.from_pretrained("openai/clip-vit-base-patch32")
+processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
+
+# Freezing CLIP model's weights (optional but recommended for faster fine-tuning)
+clip_model.trainable = False
+
+IMG_SIZE = 224
+
+# ... (rest of the model definition, loading, and summary)
+# ... 
+
+def get_clip_features(pixel_values):
+    outputs = clip_model.get_image_features(pixel_values=pixel_values)  # clip_model is available now
+    return outputs
 # Cache pour le chargement du modèle
 @st.cache_resource
 def load_model():
