@@ -7,8 +7,8 @@ import plotly.graph_objects as go
 # Cache pour le chargement du modèle
 @st.cache_resource
 def load_model():
-    model_path = "bestyYYmodelhair/"
-    return tf.saved_model.load(model_path)
+    model_path = "Openai_classifier_tf.h5"  # Assurez-vous que le chemin est correct
+    return tf.keras.models.load_model(model_path)
 
 model=load_model()
 
@@ -77,17 +77,16 @@ hair_suggestions = {
 hair_types = list(hair_suggestions.keys())
 
 # Fonction pour prédire le type de cheveux
-def predict_hair_type(image):
-    # Prétraiter l'image pour le modèle
-    image = image.resize((224, 224))
-    img_array = np.expand_dims(image, axis=0).astype(np.float32)
 
-    # Prédiction avec le modèle
-    predict_fn = model.signatures["serving_default"]
-    predictions = predict_fn(tf.constant(img_array))
-    probabilities = predictions["dense_10"].numpy()[0]
-    predicted_index = np.argmax(probabilities)
-    return hair_types[predicted_index], probabilities[predicted_index] * 100
+def predict_hair_type(image):
+    image = image.resize((224, 224))
+    #img_array = np.array(image) / 255.0  # Normalisation
+    img_array = np.expand_dims(image, axis=0)
+    
+    predictions = model.predict(img_array)
+    predicted_index = np.argmax(predictions[0])
+    confidence = predictions[0][predicted_index] * 100
+    return hair_types[predicted_index], confidence
 
 
 
