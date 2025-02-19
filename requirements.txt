@@ -1,4 +1,4 @@
-tf_keras
+tf_keras==2.15.0
 keras==2.15.0
 numpy==1.26.4
 protobuf==3.20.3
@@ -8,7 +8,7 @@ pillow==10.4.0
 tensorflow-cpu==2.15.0
 streamlit
 plotly==5.17.0
-transformers
+transformers==4.30.2
 
 
 
